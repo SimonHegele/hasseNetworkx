@@ -1,7 +1,20 @@
-def exists_path(Graph, u, v, start=False):
+def exists_path(Graph, u, v, start=True):
     '''
-    If there exits a path from u to v in G with length > 1: Return True
-    Else                                                  : Return False 
+    If there exits a path from u to v in G with length > 0: Return True
+    Else                                                  : Return False
+    Recursive method
+    (Checks if there exists a path from any successor u' of u to v)
+    
+        Parameters:
+            Graph (networkx.DiGraph)
+            u     (string),  identifier of first node in Graph
+            v     (string),  identifier of second node in Graph
+            start (boolean), True  if u is the recursion start
+                             False else
+            
+        Returns:
+            (boolean) True  if there exits a path from u to v in G
+                      False else
     '''
     # Trivial case 1: Reached v
     if u == v and not start:
@@ -17,6 +30,11 @@ def exists_path(Graph, u, v, start=False):
 def transitivity_elimination(Graph):
     ''' 
     Removes edges that are implied by transitivity of the partial order
+    
+        Parameters:
+            Graph (networkx.DiGraph)
+            
+         Returns:
     '''
     edges_to_remove = []
     for edge in Graph.edges():
@@ -27,10 +45,19 @@ def transitivity_elimination(Graph):
 def layer(positions, i):
     '''
     Returns the positions of nodes at layer i in a dictionary
+    
+        Parameters:
+            posititions (dictionary)
+            i           (int)
+            
+        Returns:
+            (dictionary) the positions of nodes at layer i in a dictionary
     '''
     return {position[0]: position[1] for position in positions.items() if  position[1][1]==i}
 
 def y_positioning(Graph, positions, n = 0):
+    ''' 
+    '''
     current_layer = layer(positions, n)
     final_layer = True
     for u in current_layer:
@@ -44,14 +71,35 @@ def y_positioning(Graph, positions, n = 0):
         return y_positioning(Graph, positions, n = n+1)
 
 def y_positioning_by_function(Graph, positions, layer_function):
+    '''
+    '''
     for node in Graph.nodes():
         positions[node] = (0, layer_function(node))
     return positions
 
 def number_of_layers(positions):
+    '''
+    Returns the number of layers in the hasse-diagramm
+    (i.e. the highest y-position value in positions)
+    
+        Parameters:
+            positions (dictionary)
+            
+        Returns:
+            (int)
+    '''
     return max([position[1][1] for position in positions.items()])
 
 def max_layer_size(positions):
+    '''
+    Returns the maximum numbber of nodes in any layer of the hasse-diagram
+    
+        Parameters:
+            positions (dictionary)
+        
+        Returns:
+            (int)
+    '''
     return max([len(layer(positions, i)) for i in range(number_of_layers(positions))])
     
 def x_positioning(Graph, positions):
