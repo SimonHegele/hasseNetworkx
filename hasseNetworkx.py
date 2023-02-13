@@ -15,6 +15,11 @@ def exists_path(Graph, u, v, start=True):
         Returns:
             (boolean) True  if there exits a path from u to v in G
                       False else
+    
+    Additional remark:
+        If the execution of this function leads to an stack overflow
+        this can indicate a faulty method for the evaluation of the
+        relationships that might cause circles in the Graph.
     '''
     # Trivial case 1: Reached v
     if u == v and not start:
@@ -35,6 +40,11 @@ def transitivity_elimination(Graph):
             Graph (networkx.DiGraph)
             
          Returns:
+         
+    Additional remark:
+        If the execution of this function leads to an stack overflow
+        this can indicate a faulty method for the evaluation of the
+        relationships that might cause circles in the Graph.
     '''
     edges_to_remove = []
     for edge in Graph.edges():
