@@ -111,14 +111,33 @@ def max_layer_size(positions):
             (int)
     '''
     return max([len(layer(positions, i)) for i in range(number_of_layers(positions))])
+
+def shift_x_positions(positions):
+    '''
+    Shifts the layers alternately by half a unit to the left or right along the x-axis.
     
-def x_positioning(Graph, positions):
+    Parametrs:
+        positions (dictionary)
+    
+    Returns:
+        (dictionary)
+    '''
+    y_positions = numpy.unique([positions[position][1] for position in positions])
+    for i, y_position in enumerate(y_positions):
+        for position in positions:
+            if positions[position][1]==y_position:
+                positions[position]=(positions[position][0]+0.5**(i%2),positions[position][1])
+    return positions
+
+def x_positioning(Graph, positions, shift_x=False):
     n = number_of_layers(positions) # height
     w = max_layer_size(positions)   # width
     for i in range(n+1):
         current_layer = layer(positions, i)
         for j, node in enumerate(current_layer):
             positions[node] = (1+2*(j+1)*w/(len(current_layer)+1), positions[node][1])
+    if shift_x:
+        return shift_x_positions(positions)
     return positions
 
 def layout(Graph, layer_function=None):
